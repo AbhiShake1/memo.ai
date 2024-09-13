@@ -13,7 +13,7 @@ export function Home() {
   return (
     <div className="flex flex-col min-h-screen items-center bg-background text-foreground">
       <header className="sticky top-0 z-20 bg-background w-full border-b">
-        <div className="container flex items-center justify-between h-16 px-4 md:px-6">
+        <div className="flex items-center justify-between h-16 px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2" prefetch={false}>
             <MicIcon className="w-6 h-6" />
             <span className="font-bold text-lg">Memo</span>
