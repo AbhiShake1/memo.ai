@@ -5,151 +5,108 @@
 */
 
 import Link from "next/link"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 
 export function Home() {
-  return (
-    <div className="flex flex-col min-h-screen items-center bg-background text-foreground">
-      <header className="sticky top-0 z-20 bg-background w-full border-b">
-        <div className="flex items-center justify-between h-16 px-4 md:px-6">
-          <Link href="/" className="flex items-center gap-2" prefetch={false}>
-            <MicIcon className="w-6 h-6" />
-            <span className="font-bold text-lg">Memo</span>
+  return <>
+    <div className="grid md:grid-cols-2 gap-8 items-center">
+      <div className="space-y-4">
+        <h1 className="text-4xl font-bold">Record and Transcribe</h1>
+        <p className="text-muted-foreground">
+          Capture your ideas and conversations with our powerful audio recording and transcription tool.
+        </p>
+        <Button size="lg" className="w-full md:w-auto" asChild>
+          <Link href="/recordings/new">
+            <MicIcon className="w-5 h-5 mr-2" />
+            Start Recording
           </Link>
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <form>
-                <Input
-                  type="search"
-                  placeholder="Search transcripts..."
-                  name="q"
-                  className="pl-10 pr-4 rounded-md bg-muted text-sm"
-                />
-              </form>
+        </Button>
+      </div>
+      <div className="relative w-full aspect-square max-w-[400px] mx-auto">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-[200px] h-[200px] rounded-full bg-primary/10 animate-pulse" />
+          <MicIcon className="w-20 h-20 text-primary" />
+        </div>
+      </div>
+    </div>
+    <div className="mt-12 md:mt-24 space-y-8">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Recent Recordings</h2>
+        <Link href="/recordings" className="text-primary hover:underline">
+          View All
+        </Link>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Meeting Notes</CardTitle>
+            <CardDescription>June 15, 2023</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-muted-foreground">
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec ultricies lacus, nisl
+                nec ultricies lacus.
+              </p>
             </div>
+          </CardContent>
+          <CardFooter>
             <Button variant="ghost" size="icon">
               <div className="w-5 h-5" />
             </Button>
-          </div>
-        </div>
-      </header>
-      <main className="flex-1 container px-4 md:px-6 py-12 md:py-24">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold">Record and Transcribe</h1>
-            <p className="text-muted-foreground">
-              Capture your ideas and conversations with our powerful audio recording and transcription tool.
-            </p>
-            <Button size="lg" className="w-full md:w-auto">
-              <MicIcon className="w-5 h-5 mr-2" />
-              Start Recording
+            <Button variant="ghost" size="icon">
+              <div className="w-5 h-5" />
             </Button>
-          </div>
-          <div className="relative w-full aspect-square max-w-[400px] mx-auto">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-[200px] h-[200px] rounded-full bg-primary/10 animate-pulse" />
-              <MicIcon className="w-20 h-20 text-primary" />
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Interview Transcript</CardTitle>
+            <CardDescription>June 10, 2023</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-muted-foreground">
+              <p>
+                Sed euismod, nisl nec ultricies lacus, nisl nec ultricies lacus. Lorem ipsum dolor sit amet,
+                consectetur adipiscing elit.
+              </p>
             </div>
-          </div>
-        </div>
-        <div className="mt-12 md:mt-24 space-y-8">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Recent Recordings</h2>
-            <Link href="#" className="text-primary hover:underline" prefetch={false}>
-              View All
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Meeting Notes</CardTitle>
-                <CardDescription>June 15, 2023</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-muted-foreground">
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec ultricies lacus, nisl
-                    nec ultricies lacus.
-                  </p>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="ghost" size="icon">
-                  <div className="w-5 h-5" />
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <div className="w-5 h-5" />
-                </Button>
-              </CardFooter>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Interview Transcript</CardTitle>
-                <CardDescription>June 10, 2023</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-muted-foreground">
-                  <p>
-                    Sed euismod, nisl nec ultricies lacus, nisl nec ultricies lacus. Lorem ipsum dolor sit amet,
-                    consectetur adipiscing elit.
-                  </p>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="ghost" size="icon">
-                  <div className="w-5 h-5" />
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <div className="w-5 h-5" />
-                </Button>
-              </CardFooter>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Brainstorming Session</CardTitle>
-                <CardDescription>June 5, 2023</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-muted-foreground">
-                  <p>
-                    Nisl nec ultricies lacus, nisl nec ultricies lacus. Lorem ipsum dolor sit amet, consectetur
-                    adipiscing elit. Sed euismod.
-                  </p>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="ghost" size="icon">
-                  <div className="w-5 h-5" />
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <div className="w-5 h-5" />
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
-        </div>
-      </main>
-      <footer className="bg-muted border-t w-full">
-        <div className="container flex items-center justify-between h-16 px-4 md:px-6">
-          <p className="text-muted-foreground text-sm">&copy; 2023 Transcribe. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>
-              Privacy
-            </Link>
-            <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>
-              Terms
-            </Link>
-            <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>
-              Contact
-            </Link>
-          </div>
-        </div>
-      </footer>
+          </CardContent>
+          <CardFooter>
+            <Button variant="ghost" size="icon">
+              <div className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <div className="w-5 h-5" />
+            </Button>
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Brainstorming Session</CardTitle>
+            <CardDescription>June 5, 2023</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-muted-foreground">
+              <p>
+                Nisl nec ultricies lacus, nisl nec ultricies lacus. Lorem ipsum dolor sit amet, consectetur
+                adipiscing elit. Sed euismod.
+              </p>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button variant="ghost" size="icon">
+              <div className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <div className="w-5 h-5" />
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
-  )
+  </>
 }
 
 function MicIcon(props: React.SVGProps<SVGSVGElement>) {
