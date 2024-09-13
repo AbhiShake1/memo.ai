@@ -54,22 +54,6 @@ export default function RootLayout({
             <main className="flex-1 container px-4 md:px-6 py-12">
               {children}
             </main>
-            <footer className="bg-muted border-t w-full">
-              <div className="container flex items-center justify-between h-16 px-4 md:px-6">
-                <p className="text-muted-foreground text-sm">&copy; 2023 Transcribe. All rights reserved.</p>
-                <div className="flex items-center gap-4">
-                  <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>
-                    Privacy
-                  </Link>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>
-                    Terms
-                  </Link>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground" prefetch={false}>
-                    Contact
-                  </Link>
-                </div>
-              </div>
-            </footer>
           </div>
         </TRPCReactProvider>
       </body>
