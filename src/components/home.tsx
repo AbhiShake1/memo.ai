@@ -25,8 +25,9 @@ export function Home() {
       </div>
       <div className="relative w-full aspect-square max-w-[400px] mx-auto">
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-[200px] h-[200px] rounded-full bg-primary/10 animate-pulse" />
-          <MicIcon className="w-20 h-20 text-primary" />
+          <div className="size-[200px] rounded-full flex items-center justify-center bg-primary/10 animate-pulse" >
+            <MicIcon className="w-20 h-20 text-primary" />
+          </div>
         </div>
       </div>
     </div>
