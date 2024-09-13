@@ -11,10 +11,10 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 
 export function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-20 bg-background border-b">
+    <div className="flex flex-col min-h-screen items-center bg-background text-foreground">
+      <header className="sticky top-0 z-20 bg-background w-full border-b">
         <div className="container flex items-center justify-between h-16 px-4 md:px-6">
-          <Link href="#" className="flex items-center gap-2" prefetch={false}>
+          <Link href="/" className="flex items-center gap-2" prefetch={false}>
             <MicIcon className="w-6 h-6" />
             <span className="font-bold text-lg">Memo</span>
           </Link>
@@ -132,7 +132,7 @@ export function Home() {
           </div>
         </div>
       </main>
-      <footer className="bg-muted border-t">
+      <footer className="bg-muted border-t w-full">
         <div className="container flex items-center justify-between h-16 px-4 md:px-6">
           <p className="text-muted-foreground text-sm">&copy; 2023 Transcribe. All rights reserved.</p>
           <div className="flex items-center gap-4">
@@ -152,7 +152,7 @@ export function Home() {
   )
 }
 
-function MicIcon(props) {
+function MicIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
