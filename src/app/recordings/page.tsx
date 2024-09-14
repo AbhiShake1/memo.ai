@@ -2,94 +2,62 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { api } from "@/trpc/server"
 
-export default function RecordingsPage() {
+export default async function RecordingsPage({ searchParams: { q } }: { searchParams: Partial<{ q: string }> }) {
+  const { data: memos } = !!q ? await api.memo.search({ query: q }) : await api.memo.all()
+
   return (
     <main>
-      <RecordingsList />
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Recordings</h1>
+        <Button asChild>
+          <Link href="/recordings/new" className="flex items-center gap-2" prefetch={false}>
+            <MicIcon className="w-5 h-5 mr-2" />
+            New Recording
+          </Link>
+        </Button>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>All Recordings</CardTitle>
+          <CardDescription>A list of all your recorded and transcribed sessions.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Duration</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {memos?.map(({ title, created_at, duration }) => (
+                <TableRow>
+                  <TableCell className="font-medium">{title}</TableCell>
+                  <TableCell>{created_at}</TableCell>a
+                  <TableCell>{duration}</TableCell>
+                  <TableCell>
+                    <Button variant="ghost" size="sm">
+                      <PlayIcon className="w-4 h-4 mr-2" />
+                      Play
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      <FileTextIcon className="w-4 h-4 mr-2" />
+                      Transcript
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </main>
   );
 }
-
-function RecordingsList() {
-  return <>
-    <div className="flex justify-between items-center mb-8">
-      <h1 className="text-3xl font-bold">Recordings</h1>
-      <Button asChild>
-        <Link href="/recordings/new" className="flex items-center gap-2" prefetch={false}>
-          <MicIcon className="w-5 h-5 mr-2" />
-          New Recording
-        </Link>
-      </Button>
-    </div>
-    <Card>
-      <CardHeader>
-        <CardTitle>All Recordings</CardTitle>
-        <CardDescription>A list of all your recorded and transcribed sessions.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Duration</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">Meeting Notes</TableCell>
-              <TableCell>June 15, 2023</TableCell>
-              <TableCell>32:10</TableCell>
-              <TableCell>
-                <Button variant="ghost" size="sm">
-                  <PlayIcon className="w-4 h-4 mr-2" />
-                  Play
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <FileTextIcon className="w-4 h-4 mr-2" />
-                  Transcript
-                </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">Interview Transcript</TableCell>
-              <TableCell>June 10, 2023</TableCell>
-              <TableCell>45:22</TableCell>
-              <TableCell>
-                <Button variant="ghost" size="sm">
-                  <PlayIcon className="w-4 h-4 mr-2" />
-                  Play
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <FileTextIcon className="w-4 h-4 mr-2" />
-                  Transcript
-                </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">Brainstorming Session</TableCell>
-              <TableCell>June 5, 2023</TableCell>
-              <TableCell>28:45</TableCell>
-              <TableCell>
-                <Button variant="ghost" size="sm">
-                  <PlayIcon className="w-4 h-4 mr-2" />
-                  Play
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <FileTextIcon className="w-4 h-4 mr-2" />
-                  Transcript
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
-  </>
-}
-
 
 function MicIcon(props: React.SVGProps<SVGSVGElement>) {
   return (

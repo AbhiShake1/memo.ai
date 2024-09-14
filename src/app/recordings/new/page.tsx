@@ -1,19 +1,19 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { api } from "@/trpc/react"
 
 export default function NewRecording() {
   const [isRecording, setIsRecording] = useState(false)
   const [recordingTime, setRecordingTime] = useState(0)
 
-  const toggleRecording = () => {
-    setIsRecording(!isRecording)
-    if (!isRecording) {
+  useEffect(() => {
+    if (isRecording) {
       // Start the timer
       const interval = setInterval(() => {
         setRecordingTime((prevTime) => prevTime + 1)
@@ -23,6 +23,10 @@ export default function NewRecording() {
       // Reset the timer
       setRecordingTime(0)
     }
+  }, [isRecording])
+
+  const toggleRecording = () => {
+    setIsRecording(r => !r)
   }
 
   const formatTime = (time: number) => {
@@ -31,47 +35,54 @@ export default function NewRecording() {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
   }
 
+  const addMutation = api.memo.create.useMutation()
+
   return <>
     <div className="max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold mb-8">New Recording</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Start a New Recording</CardTitle>
-          <CardDescription>Record your audio and we'll transcribe it for you.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="relative w-32 h-32 flex items-center justify-center">
-              <div className={`absolute inset-0 rounded-full ${isRecording ? 'animate-pulse bg-red-500/20' : 'bg-primary/10'}`} />
+      <form onSubmit={async (e) => {
+        e.preventDefault()
+        addMutation.mutate({ description: "i am abhi", title: "test", duration: 120, transcript: "i am abhi", recording_url: "" })
+      }}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Start a New Recording</CardTitle>
+            <CardDescription>Record your audio and we'll transcribe it for you.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-col items-center space-y-4">
               <Button
                 variant={isRecording ? "destructive" : "default"}
                 size="icon"
                 className="w-24 h-24 rounded-full"
                 onClick={toggleRecording}
               >
-                {isRecording ? (
-                  <StopIcon className="w-12 h-12" />
-                ) : (
-                  <MicIcon className="w-12 h-12" />
-                )}
+                <div className="relative w-32 h-32 flex items-center justify-center">
+                  <div className={`absolute inset-0 rounded-full ${isRecording ? 'animate-pulse bg-red-500/20' : 'bg-primary/10'}`} />
+                  {isRecording ? (
+                    <StopIcon className="w-12 h-12" />
+                  ) : (
+                    <MicIcon className="w-12 h-12" />
+                  )}
+                </div>
               </Button>
+              <div className="text-2xl font-bold">{formatTime(recordingTime)}</div>
             </div>
-            <div className="text-2xl font-bold">{formatTime(recordingTime)}</div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="title">Recording Title</Label>
-            <Input id="title" placeholder="Enter a title for your recording" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="description">Description (optional)</Label>
-            <Textarea id="description" placeholder="Add a description for your recording" />
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline">Cancel</Button>
-          <Button disabled={!isRecording && recordingTime === 0}>Save Recording</Button>
-        </CardFooter>
-      </Card>
+            <div className="space-y-2">
+              <Label htmlFor="title">Recording Title</Label>
+              <Input id="title" placeholder="Enter a title for your recording" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description (optional)</Label>
+              <Textarea id="description" placeholder="Add a description for your recording" />
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button variant="outline">Cancel</Button>
+            <Button disabled={false/* !isRecording && recordingTime === 0 */}>Save Recording</Button>
+          </CardFooter>
+        </Card>
+      </form>
     </div>
   </>
 }

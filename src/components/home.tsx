@@ -7,6 +7,8 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
+import { Suspense } from "react"
+import { api } from "@/trpc/server"
 
 export function Home() {
   return <>
@@ -38,76 +40,41 @@ export function Home() {
           View All
         </Link>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Meeting Notes</CardTitle>
-            <CardDescription>June 15, 2023</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-muted-foreground">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec ultricies lacus, nisl
-                nec ultricies lacus.
-              </p>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button variant="ghost" size="icon">
-              <div className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <div className="w-5 h-5" />
-            </Button>
-          </CardFooter>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Interview Transcript</CardTitle>
-            <CardDescription>June 10, 2023</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-muted-foreground">
-              <p>
-                Sed euismod, nisl nec ultricies lacus, nisl nec ultricies lacus. Lorem ipsum dolor sit amet,
-                consectetur adipiscing elit.
-              </p>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button variant="ghost" size="icon">
-              <div className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <div className="w-5 h-5" />
-            </Button>
-          </CardFooter>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Brainstorming Session</CardTitle>
-            <CardDescription>June 5, 2023</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-muted-foreground">
-              <p>
-                Nisl nec ultricies lacus, nisl nec ultricies lacus. Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit. Sed euismod.
-              </p>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button variant="ghost" size="icon">
-              <div className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <div className="w-5 h-5" />
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
+      <Suspense>
+        <Recordings />
+      </Suspense>
     </div>
   </>
+}
+
+async function Recordings() {
+  const { data: recordings } = await api.memo.all()
+
+  return <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {recordings?.map(({ title, created_at, description }) => (
+      <Card>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{created_at}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-muted-foreground">
+            <p>
+              {description}
+            </p>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button variant="ghost" size="icon">
+            <div className="w-5 h-5" />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <div className="w-5 h-5" />
+          </Button>
+        </CardFooter>
+      </Card>
+    ))}
+  </div>
 }
 
 function MicIcon(props: React.SVGProps<SVGSVGElement>) {
