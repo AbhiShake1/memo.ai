@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { api } from "@/trpc/server"
+import moment from "moment"
 
 export default async function RecordingsPage({ searchParams: { q } }: { searchParams: Partial<{ q: string }> }) {
   const { data: memos } = !!q ? await api.memo.search({ query: q }) : await api.memo.all()
@@ -37,7 +38,7 @@ export default async function RecordingsPage({ searchParams: { q } }: { searchPa
               {memos?.map(({ id, title, created_at, duration }) => (
                 <TableRow key={id}>
                   <TableCell className="font-medium">{title}</TableCell>
-                  <TableCell>{created_at}</TableCell>a
+                  <TableCell>{moment(created_at).format("ddd, Do MMMM")}</TableCell>a
                   <TableCell>{duration}</TableCell>
                   <TableCell>
                     <Button variant="ghost" size="sm">
