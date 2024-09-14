@@ -34,8 +34,8 @@ export default async function RecordingsPage({ searchParams: { q } }: { searchPa
               </TableRow>
             </TableHeader>
             <TableBody>
-              {memos?.map(({ title, created_at, duration }) => (
-                <TableRow>
+              {memos?.map(({ id, title, created_at, duration }) => (
+                <TableRow key={id}>
                   <TableCell className="font-medium">{title}</TableCell>
                   <TableCell>{created_at}</TableCell>a
                   <TableCell>{duration}</TableCell>

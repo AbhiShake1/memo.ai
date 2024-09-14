@@ -51,8 +51,8 @@ async function Recordings() {
   const { data: recordings } = await api.memo.all()
 
   return <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    {recordings?.map(({ title, created_at, description }) => (
-      <Card>
+    {recordings?.map(({ id, title, created_at, description }) => (
+      <Card key={id}>
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{created_at}</CardDescription>
