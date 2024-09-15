@@ -20,7 +20,7 @@ import { getApiKey } from "../_actions";
 
 interface DeepgramContextType {
   connection: LiveClient | null;
-  connectToDeepgram: (options: LiveSchema, endpoint?: string) => Promise<void>;
+  connectToDeepgram: (options: LiveSchema, endpoint?: string) => Promise<LiveClient>;
   disconnectFromDeepgram: () => void;
   connectionState: SOCKET_STATES;
 }
@@ -63,6 +63,8 @@ const DeepgramContextProvider: FunctionComponent<
     });
 
     setConnection(conn);
+
+    return conn;
   };
 
   const disconnectFromDeepgram = async () => {
@@ -99,7 +101,7 @@ function useDeepgram(): DeepgramContextType {
 export {
   DeepgramContextProvider,
   useDeepgram,
-  SOCKET_STATES as LiveConnectionState,
+  SOCKET_STATES,
   LiveTranscriptionEvents,
   type LiveTranscriptionEvent,
 };

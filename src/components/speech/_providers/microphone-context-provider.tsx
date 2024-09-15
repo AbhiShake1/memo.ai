@@ -2,17 +2,18 @@
 
 import {
   createContext,
-  useCallback,
   useContext,
   useState,
   ReactNode,
+  useRef,
+  useCallback,
 } from "react";
 
 interface MicrophoneContextType {
   microphone: MediaRecorder | null;
   startMicrophone: () => void;
   stopMicrophone: () => void;
-  setupMicrophone: () => void;
+  setupMicrophone: () => Promise<void>;
   microphoneState: MicrophoneState | null;
 }
 
@@ -50,9 +51,11 @@ const MicrophoneContextProvider: React.FC<MicrophoneContextProviderProps> = ({
   const [microphoneState, setMicrophoneState] = useState<MicrophoneState>(
     MicrophoneState.NotSetup
   );
+  //const microphone = useRef<MediaRecorder | null>(null);
   const [microphone, setMicrophone] = useState<MediaRecorder | null>(null);
+  const thisUserMedia = useRef<MediaStream | null>(null);
 
-  const setupMicrophone = async () => {
+  async function setupMicrophone() {
     setMicrophoneState(MicrophoneState.SettingUp);
 
     try {
@@ -62,11 +65,13 @@ const MicrophoneContextProvider: React.FC<MicrophoneContextProviderProps> = ({
           echoCancellation: true,
         },
       });
+      thisUserMedia.current = userMedia
 
       const microphone = new MediaRecorder(userMedia);
 
       setMicrophoneState(MicrophoneState.Ready);
       setMicrophone(microphone);
+      //microphone.current = new MediaRecorder(userMedia);
     } catch (err: any) {
       console.error(err);
 
@@ -74,16 +79,39 @@ const MicrophoneContextProvider: React.FC<MicrophoneContextProviderProps> = ({
     }
   };
 
-  const stopMicrophone = useCallback(() => {
+  function stopMicrophone() {
     setMicrophoneState(MicrophoneState.Pausing);
 
     if (microphone?.state === "recording") {
-      microphone.pause();
+      microphone.stop();
+      thisUserMedia.current?.getTracks().forEach(t => t.stop())
       setMicrophoneState(MicrophoneState.Paused);
     }
-  }, [microphone]);
+  }
 
-  const startMicrophone = useCallback(() => {
+  //async function stopMicrophone() {
+  //  setMicrophoneState(MicrophoneState.Pausing);
+  //
+  //  if (microphone.current?.state === "recording") {
+  //    microphone.current.stop();
+  //    thisUserMedia.current?.getTracks().forEach(t => t.stop())
+  //    setMicrophoneState(MicrophoneState.Paused);
+  //  }
+  //}
+  //
+  //async function startMicrophone() {
+  //  setMicrophoneState(MicrophoneState.Opening);
+  //
+  //  if (microphone.current?.state === "paused") {
+  //    microphone.current.resume();
+  //  } else {
+  //    microphone.current?.start(250);
+  //  }
+  //
+  //  setMicrophoneState(MicrophoneState.Open);
+  //}
+
+  function startMicrophone() {
     setMicrophoneState(MicrophoneState.Opening);
 
     if (microphone?.state === "paused") {
@@ -93,12 +121,13 @@ const MicrophoneContextProvider: React.FC<MicrophoneContextProviderProps> = ({
     }
 
     setMicrophoneState(MicrophoneState.Open);
-  }, [microphone]);
+  }
 
   return (
     <MicrophoneContext.Provider
       value={{
         microphone,
+        //microphone: microphone.current,
         startMicrophone,
         stopMicrophone,
         setupMicrophone,
