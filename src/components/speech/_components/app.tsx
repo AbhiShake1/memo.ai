@@ -17,6 +17,8 @@ import { Button, ButtonProps } from "@/components/ui/button";
 import { IntervalTimer } from "@/lib/utils/interval-timer";
 import { CheckIcon, PauseIcon, PlayIcon } from "lucide-react"
 import { ListenLiveClient } from "@deepgram/sdk";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export enum RecordingState {
   idle = 0,
@@ -84,7 +86,7 @@ export enum RecordingState {
 //};
 
 export function SpeechApp() {
-  const [caption, setCaption] = useState("");
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const { connection, connectToDeepgram, connectionState } = useDeepgram();
   const { setupMicrophone, microphone, startMicrophone, microphoneState } =
     useMicrophone();
@@ -102,7 +104,8 @@ export function SpeechApp() {
         interim_results: true,
         smart_format: true,
         filler_words: true,
-        utterance_end_ms: 3000,
+        utterance_end_ms: 1000,
+        no_delay: true,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,8 +126,8 @@ export function SpeechApp() {
     const onTranscript = (data: LiveTranscriptionEvent) => {
       let thisCaption = data.channel.alternatives[0]?.transcript ?? "";
 
-      if (data.speech_final)
-        setCaption(c => `${c} ${thisCaption}`);
+      if (data.is_final)
+        inputRef.current!.value = `${inputRef.current!.value} ${thisCaption}`;
     };
 
     if (connectionState === SOCKET_STATES.open) {
@@ -135,11 +138,9 @@ export function SpeechApp() {
     }
 
     return () => {
-      // prettier-ignore
       connection.removeListener(LiveTranscriptionEvents.Transcript, onTranscript);
       microphone.removeEventListener(MicrophoneEvents.DataAvailable, onData);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectionState]);
 
   useEffect(() => {
@@ -161,7 +162,6 @@ export function SpeechApp() {
     return () => {
       clearInterval(keepAliveInterval.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [microphoneState, connectionState]);
 
   return (
@@ -172,7 +172,7 @@ export function SpeechApp() {
             <div className="relative w-full h-full">
               {microphone && <Visualizer microphone={microphone} />}
               <div className="absolute top-0 inset-x-0 p-4 text-left">
-                {caption && <span contentEditable onInput={e => setCaption(e.currentTarget.textContent ?? "")}>{caption}</span>}
+                <Textarea ref={inputRef} className="h-[10vh]" />
               </div>
             </div>
           </div>
@@ -206,7 +206,6 @@ SpeechApp.ControlButton = () => {
   const timer = timerRef.current
 
   useEffect(() => {
-    console.log(microphoneState)
     switch (microphoneState) {
       case MicrophoneState.Open:
         // Start the timer
